@@ -171,7 +171,7 @@ char* calc(char* str) // parse, check and calculate the expression
 							free(tmp);
 						}
 						memset(str, '\0', SIZEMAX);
-						sprintf(str, "Новая переменная %s со значением %lf успешно создана.", vars[varCount - 1]->name, vars[varCount - 1]->value);
+						sprintf(str, "New variable %s with value %lf was successfully created.", vars[varCount - 1]->name, vars[varCount - 1]->value);
 						return str;
 					}
 					else
@@ -301,7 +301,7 @@ void listVariables() // output known variables to console
 {
 	int i = 0;
 	printf("------------------------------------------\n");
-	printf("%-20s%-20s\n\n", "ИМЯ ПЕРЕМЕННОЙ", "ЗНАЧЕНИЕ");
+	printf("%-20s%-20s\n\n", "VARIABLE", "VALUE");
 
 	for (i = 0; i < varCount; i++)
 	{
