@@ -5,6 +5,8 @@ For example: 2 3 + 5 -, and the answer to this expression will be 0.
 To add variable to memory, type in the following expression:
 [Variable name] [It's value] =
 
+Decimal separator for real numbers is a comma ",".
+
 Available commands:
 
 LISTVAR
