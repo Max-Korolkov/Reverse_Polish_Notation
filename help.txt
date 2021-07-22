@@ -1,16 +1,17 @@
-Обратная польская запись (англ. Reverse Polish notation, RPN) — форма записи математических и логических выражений, в которой операнды расположены перед знаками операций.
-Пример записи: 2 3 + 5 -, ответом на это выражение будет число 0.
+Reverse Polish notation (RPN), also known as Polish postfix notation or simply postfix notation, is a mathematical notation in which operators follow their operands.
+It does not need any parentheses as long as each operator has a fixed number of operands.
+For example: 2 3 + 5 -, and the answer to this expression will be 0.
 
-Чтобы запомнить переменную, введите выражение вида
-[Имя переменной] [Значение] =
+To add variable to memory, type in the following expression:
+[Variable name] [It's value] =
 
-Команды:
+Available commands:
 
 LISTVAR
-Вывод списка известных переменных
+Lists all known variables in console.
 
 CLRVAR
-Очистка списка известных переменных
+Deletes known variables from memory.
 
 ESCAPE
-Завершение работы программы
+Exits the program.

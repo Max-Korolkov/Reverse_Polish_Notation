@@ -54,13 +54,13 @@ int main()
 {
 	char str[SIZEMAX] = { '\0' };
 	setlocale(LC_ALL, "RUS");
-	printf("бБЕДХРЕ БШПЮФЕМХЕ Б НАПЮРМНИ ОНКЭЯЙНИ ГЮОХЯХ.\n");
-	printf("дКЪ ОНКСВЕМХЪ ДНОНКМХРЕКЭМНИ ХМТНПЛЮЖХХ Н ЙНЛЮМДЮУ, ББЕДХРЕ ЯКНБН HELP.\n");
-	printf("вРНАШ ГЮБЕПЬХРЭ ПЮАНРС, ББЕДХРЕ ЯКНБН ESCAPE.\n\n");
+	printf("Type in the expression in Reverse Polish Notation.\n");
+	printf("To get additional info on RPN or availible commands, type in HELP.\n");
+	printf("To exit the program, type in ESCAPE.\n\n");
 
 	while (1)
 	{
-		printf("ббнд: ");
+		printf("INPUT: ");
 		//scanf("%s", str);
 		gets_s(str, SIZEMAX);
 		if (strcmp(str, "ESCAPE") == 0)
@@ -71,7 +71,7 @@ int main()
 		if (strcmp(str, "CLRVAR") == 0)
 		{
 			clearVariables();
-			printf("яОХЯНЙ ХГБЕЯРМШУ ОЕПЕЛЕММШУ НВХЫЕМ.\n\n");
+			printf("Known variables have been deleted from memory.\n\n");
 			continue;
 		}
 		if (strcmp(str, "LISTVAR") == 0)
@@ -89,13 +89,17 @@ int main()
 		}
 		else
 		{
-			printf("бшбнд: %s\n\n", calc(str));
+			printf("OUTPUT: %s\n\n", calc(str));
 		}
 	}
 }
 
-char* calc(char* str) // тсмйжхъ опнбепйх х бшвхякемхъ бшпюфемхъ
+char* calc(char* str) // parse, check and calculate the expression
 {
+	// this function parses the string, checks for errors, such as
+	// invalid variable names, incorrect number of operators,
+	// and calculates the expression (or adds variable to memory)
+	// returns the result (or error message) as a string
 	int i = 0;
 	int foundVariable = 0;
 	char* newVarName = NULL;
@@ -112,11 +116,11 @@ char* calc(char* str) // тсмйжхъ опнбепйх х бшвхякемхъ бшпюфемхъ
 	{
 		mallocCheck = NULL;
 
-		// опнбепйю кейяелш мю хлъ йнмярюмрш
+		// check lexem for known constants
 		if (strcmp(tmp, "EXP") == 0) tmp = EXP;
 		if (strcmp(tmp, "PI") == 0) tmp = PI;
 
-		// опнбепйю кейяелш мю хлъ хгбеярмни оепелеммни
+		// check lexem for known variable names
 		foundVariable = 0;
 		for (i = 0; i < varCount; i++)
 		{
@@ -222,15 +226,15 @@ char* calc(char* str) // тсмйжхъ опнбепйх х бшвхякемхъ бшпюфемхъ
 		switch (codeErr)
 		{
 		case 1:
-			return "нЬХАЙЮ! б ЯРЕЙЕ АНКЭЬЕ ДБСУ ВХЯЕК.";
+			return "Error! Stack has more than 2 numbers in it.";
 		case 2:
-			return "нЬХАЙЮ! мЕДНОСЯРХЛНЕ ХЯОНКЭГНБЮМХЕ НОЕПЮРНПЮ.";
+			return "Error! Illegal use of an operator.";
 		case 3:
-			return "нЬХАЙЮ! мЕДНОСЯРХЛНЕ БШПЮФЕМХЕ.";
+			return "Error! Invalid expression.";
 		case 4:
-			return "нЬХАЙЮ! оНОШРЙЮ ОПХЯБНХРЭ ГМЮВЕМХЕ МЕНОПЕДЕКЕММНИ ОЕПЕЛЕММНИ.";
+			return "Error! Failed attempt at changing the value of a unknown variable.";
 		case 5:
-			return "нЬХАЙЮ! мЕСДЮВМЮЪ ОНОШРЙЮ ЯНГДЮМХЪ МНБНИ ОЕПЕЛЕММНИ (МЕДНЯРЮРНВМН ОЮЛЪРХ).";
+			return "Error! Failed attempt at creating knew variable (not enough memory).";
 		}
 	}
 
@@ -245,7 +249,7 @@ char* calc(char* str) // тсмйжхъ опнбепйх х бшвхякемхъ бшпюфемхъ
 	return str;
 }
 
-int createVariable(char* varName) // тсмйжхъ днаюбкемхъ оепелеммни б люяяхб хгбеярмшу
+int createVariable(char* varName) // add variable to known variable list
 {
 	variable* newVar = NULL;
 
@@ -278,7 +282,7 @@ int createVariable(char* varName) // тсмйжхъ днаюбкемхъ оепелеммни б люяяхб хгбе
 	return 1;
 }
 
-void clearVariables() // тсмйжхъ нвхярйх яохяйю хгбеярмшу оепелеммшу
+void clearVariables() // clear known variable list
 {
 	int i = 0;
 
@@ -293,7 +297,7 @@ void clearVariables() // тсмйжхъ нвхярйх яохяйю хгбеярмшу оепелеммшу
 	return;
 }
 
-void listVariables() // тсмйжхъ бшбндю яохяйю хгбеярмшу оепелеммшу
+void listVariables() // output known variables to console
 {
 	int i = 0;
 	printf("------------------------------------------\n");
@@ -309,7 +313,7 @@ void listVariables() // тсмйжхъ бшбндю яохяйю хгбеярмшу оепелеммшу
 	return;
 }
 
-void stackClear() // тсмйжхъ нвхярйх ярейю
+void stackClear() // clear stack
 {
 	int i = 0;
 	for (i = 0; i < SIZESTACK; i++)
@@ -318,18 +322,18 @@ void stackClear() // тсмйжхъ нвхярйх ярейю
 	}
 }
 
-int stackSize() // тсмйжхъ бшбндю пюглепю ярейю
+int stackSize() // get current stack size
 {
 	return trunc(stack[0]);
 }
 
-void stackPush(double value) // тсмйжхъ днаюбкемхъ вхякю б ярей
+void stackPush(double value) // push number into the stack
 {
 	stack[stackSize() + 1] = value;
 	stack[0] += 1;
 }
 
-double stackPop() // тсмйжхъ бгърхъ вхякю хг ярейю
+double stackPop() // get number from stack
 {
 	double res = 0;
 	res = stack[stackSize()];
@@ -338,7 +342,7 @@ double stackPop() // тсмйжхъ бгърхъ вхякю хг ярейю
 	return res;
 }
 
-double operate(char operator) // тсмйжхъ дкъ бшонкмемхъ юпхтлерхвеяйни ноепюжхх мюд вхякюлх б ярейе
+double operate(char operator) // do the correct arithmetic operation on numbers in the stack
 {
 	double op2 = stackPop();
 	double op1 = stackPop();
@@ -359,111 +363,112 @@ double operate(char operator) // тсмйжхъ дкъ бшонкмемхъ юпхтлерхвеяйни ноепюжхх 
 	}
 }
 
-int isOperator(char* str) // тсмйжхъ бшъбкемхъ опхмюдкефмнярх яхлбнкю й юпхтлерхвеяйхл ноепюрнпюл
+int isOperator(char* str) // is the string an operator?
 {
-	// еякх яхлбнк еярэ б ярпнйе "+-/*^=" х дкхмю ярпнйх мю бунде тсмйжхх - 1
+	// if input string is present in string "+-/*^=" and input string length is 1
 	if (strpbrk(str, "+-/*^=") != NULL && strlen(str) == 1)
 	{
-		// бшунд ян гмювемхел "хярхмю"
+		// return true
 		return 1;
 	}
 	else
 	{
-		// бшунд ян гмювемхел "кнфэ"
+		// return false
 		return 0;
 	}
 }
 
-int isNumber(char* str) // тсмйжхъ, йнрнпюъ нопедекъер, ъбкъеряъ кх ярпнйю вхякнл
+int isNumber(char* str) // is the string a number?
 {
 	int i = 0;
-	int foundPoint = 0; // ткюц мюунфдемхъ яхлбнкю-пюгдекхрекъ б беыеярбеммнл вхяке
+	int foundPoint = 0; // boolean flag: encountered a decimal separator
 
-	// оняхлбнкэмши опнунд он ярпнйе
+	// checking all symbols in a string
 	for (i = 0; i < strlen(str); i++)
 	{
-		// яхлбнк - ме вхякн
+		// if symbol is not a number
 		if (isdigit(str[i]) == 0)
 		{
-			// еякх оепбши яхлбнк "-" х нм ме едхмярбеммши б ярпнйе
+			// if first symbol is a "-" sing, and there are other symbols in the string
 			if (str[i] == '-' && i == 0 && strlen(str) != 1)
 			{
 				continue;
 			}
-			// еякх бярпевем яхлбнк-пюгдекхрекэ
+			// if symbol is a decimal separator
 			else if (str[i] == ',')
 			{
-				// яхлбнк-пюгдекхрекэ ме ашк бярпевем пюмее
+				// if decimal separator hadn't been found yet
 				if (foundPoint == 0)
 				{
-					// яхлбнк-пюгдекхрекэ мюидем
+					// decimal separator had been found
 					foundPoint = 1;
 					continue;
 				}
 				else
 				{
-					// бшунд ян гмювемхел "кнфэ"
+					// return false
 					return 0;
 				}
 			}
 			else
 			{
-				// бшунд ян гмювемхел "кнфэ"
+				// return false
 				return 0;
 			}
 		}
 	}
-	// бшунд ян гмювемхел "хярхмю"
+	// return true
 	return 1;
 }
 
-int validVarName(char* str) // тсмйжхъ, нопедекъчыюъ йнппейрмнярэ хлемх оепелеммни (он ярюмдюпрс ях)
+int validVarName(char* str) // is the string a valid variable name, according to C standard?
 {
 	int i = 0;
 
-	// еякх оепбши яхлбнк ярпнйх - ме асйбю
+	// if first symbol is not a letter
 	if (isalpha(str[0]) == 0)
 	{
-		// бшунд хг тсмйжхх ян гмювемхел "кнфэ"
+		// return false
 		return 0;
 	}
-	// опнунд он ярпнйе
+	// checking all symbols in a string
 	for (i = 1; i < strlen(str); i++)
 	{
-		// еякх яхлбнк - ме жхтпю хкх асйбю
+		// if symbol is not a letter or a number
 		if (isalnum(str[i]) == 0)
 		{
-			// бшунд хг тсмйжхх ян гмювемхел "кнфэ"
+			// return false
 			return 0;
 		}
 	}
-	// бшунд хг тсмйжхх ян гмювемхел "хярхмю"
+	// return true
 	return 1;
 }
 
-int printFile(char* fileName) // тсмйжхъ бшбндю яндепфхлнцн тюикю б йнмянкэ
+int printFile(char* fileName) // outputs the contents of the file to console
 {
-	FILE* input;					// сйюгюрекэ мю тюик ббндю
+	FILE* input;					// pointer to a FILE
 
-	char tmpS[SIZEMAX] = { 0 };		// ярюрхвеяйхи люяяхб пюглепю 256 щкелемрнб дкъ яверю ярпнй хг тюикю
+	char tmpS[SIZEMAX] = { 0 };		// static array for getting contents of a file
 
-	// нрйпшрхе тюикю дкъ времхъ
+	// open the file for reading
 	input = fopen(fileName, "r");
 
-	// еякх тюик ббндю ме нрйпшр.
+	// if an error occured
 	if (input == NULL)
 	{
 		return -1;
 	}//if
 
-	while (fgets(tmpS, SIZEMAX, input) != NULL)		// онйю ме йнмеж тюикю
+	// while file still has contents
+	while (fgets(tmpS, SIZEMAX, input) != NULL)	
 	{
 		printf("%s", tmpS);
 	}//while
 
-	// гюйпшрхе тюикю дкъ времхъ
+	// close the file
 	fclose(input);
 
-	// тсмйжхъ бнгбпюыюер 0 б яксвюе сяоеьмнцн бшонкмемхъ
+	// return 0 (no errors) and exit the function
 	return 0;
 }//printFile
